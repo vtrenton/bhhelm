@@ -49,19 +49,3 @@ spec:
         persistentVolumeClaim:
           claimName: {{ .Values.graph-db.volumes.persistentVolumeClaim.claimName }}
       {{- end }}
-
-{{- if .Values.graph-db.volumes.pvcEnabled }}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ .Values.graph-db.volumes.persistentVolumeClaim.claimName }}
-  namespace: {{ .Values.graph-db.namespace }}
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: {{ .Values.graph-db.volumes.persistentVolumeClaim.size }}
-{{- end }}
-

@@ -45,6 +45,18 @@ graph-db:
     ports:
       - containerPort: 7687
       - containerPort: 7474
+  service:
+    enabled: true
+    type: ClusterIP
+    ports:
+      - name: graph-db
+        protocol: TCP
+        port: 7687
+        targetPort: 7687
+      - name: http
+        protocol: TCP
+        port: 7474
+        targetPort: 7474
   livenessProbe:
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -55,3 +67,28 @@ graph-db:
     persistentVolumeClaim:
       claimName: graph-db-neo4j-data-pvc
       size: "1Gi"  # Configurable storage size
+
+bloodhound:
+  name: bloodhound
+  replicas: 1
+  appName: bloodhound
+  container:
+    name: bloodhound
+    image: docker.io/specterops/bloodhound:latest
+    env:
+      bhe_disable_cypher_qc: "false"
+    ports:
+      - containerPort: 8080
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+  ingress:
+    enabled: false
+    host: bloodhound.example.com
+    path: /
+    tls: false
+  configMap:
+    enabled: false
+    name: bloodhound-config
