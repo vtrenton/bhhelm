@@ -1,11 +1,14 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: graph-db-neo4j-data-pvc
+  name: bloodhound-postgres-pvc
   namespace: bloodhoundad
+  metadata:
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
+      storage: 1Gi

@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: graph-db
   namespace: bloodhoundad
+  metadata:
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
 spec:
   selector:
     app: graph-db

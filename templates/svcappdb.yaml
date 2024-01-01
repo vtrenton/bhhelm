@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: app-db 
   namespace: bloodhoundad
+  metadata:
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
 spec:
   selector:
     app: bloodhound-postgres

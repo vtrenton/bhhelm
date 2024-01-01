@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: graph-db
   namespace: bloodhoundad
+  metadata:
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
 spec:
   replicas: 1
   selector:
