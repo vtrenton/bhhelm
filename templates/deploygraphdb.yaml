@@ -1,32 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: graph-db
-  namespace: bloodhoundad
-  metadata:
+  name: {{ .Values.graph-db.name }}
+  namespace: {{ .Values.namespace }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
 spec:
-  replicas: 1
+  replicas: {{ .Values.graph-db.replicas }}
   selector:
     matchLabels:
-      app: graph-db
+      app: {{ .Values.graph-db.appName }}
   template:
     metadata:
       labels:
-        app: graph-db
+        app: {{ .Values.graph-db.appName }}
     spec:
       containers:
-      - name: neo4j
-        image: docker.io/library/neo4j:4.4
+      - name: {{ .Values.graph-db.container.name }}
+        image: {{ .Values.graph-db.container.image }}
         env:
         - name: NEO4J_AUTH
-          value: "neo4j/bloodhoundcommunityedition"
+          value: {{ .Values.graph-db.container.env.NEO4J_AUTH }}
         - name: NEO4J_dbms_allow__upgrade
-          value: "true"
+          value: {{ .Values.graph-db.container.env.NEO4J_dbms_allow__upgrade }}
         ports:
-        - containerPort: 7687
-        - containerPort: 7474
+        - containerPort: {{ .Values.graph-db.container.ports[0].containerPort }}
+        - containerPort: {{ .Values.graph-db.container.ports[1].containerPort }}
         livenessProbe:
           exec:
             command:
@@ -35,11 +34,34 @@ spec:
             - /dev/null
             - -q
             - http://localhost:7474
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 5
-     # volumes:
-     # - name: neo4j-data
-     #   persistentVolumeClaim:
-     #     claimName: graph-db-neo4j-data-pvc
+          initialDelaySeconds: {{ .Values.graph-db.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.graph-db.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.graph-db.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.graph-db.livenessProbe.failureThreshold }}
+        {{- if .Values.graph-db.volumes.pvcEnabled }}
+        volumeMounts:
+        - name: neo4j-data
+          mountPath: /var/lib/neo4j/data
+        {{- end }}
+      {{- if .Values.graph-db.volumes.pvcEnabled }}
+      volumes:
+      - name: neo4j-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.graph-db.volumes.persistentVolumeClaim.claimName }}
+      {{- end }}
+
+{{- if .Values.graph-db.volumes.pvcEnabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.graph-db.volumes.persistentVolumeClaim.claimName }}
+  namespace: {{ .Values.graph-db.namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.graph-db.volumes.persistentVolumeClaim.size }}
+{{- end }}
+

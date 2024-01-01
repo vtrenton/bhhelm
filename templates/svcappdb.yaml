@@ -1,16 +1,15 @@
+{{- if .Values.app-db.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-db 
-  namespace: bloodhoundad
-  metadata:
-  annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
+  name: app-db
+  namespace: {{ .Values.namespace }}
 spec:
-  selector:
-    app: bloodhound-postgres
+  type: {{ .Values.app-db.service.type }}
   ports:
-    - protocol: TCP
-      port: 5432
-      targetPort: 5432
-  type: ClusterIP
+    - port: {{ .Values.app-db.service.port }}
+      targetPort: {{ .Values.app-db.service.targetPort }}
+      protocol: TCP
+  selector:
+    app: {{ .Values.app-db.appName }}
+{{- end }}

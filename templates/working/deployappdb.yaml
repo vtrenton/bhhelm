@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bloodhound-postgres
+  namespace: bloodhoundad
+  metadata:
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bloodhound-postgres
+  template:
+    metadata:
+      labels:
+        app: bloodhound-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: docker.io/library/postgres:13.2
+        env:
+        - name: POSTGRES_USER
+          value: "bloodhound"
+        - name: POSTGRES_PASSWORD
+          value: "bloodhoundcommunityedition"
+        - name: POSTGRES_DB
+          value: "bloodhound"
+        ports:
+        - containerPort: 5432
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - bloodhound
+            - -d
+            - bloodhound
+            - -h
+            - 127.0.0.1
+            - -p
+            - "5432"
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 5
+     # volumes:
+     #- name: postgres-data
+     #   persistentVolumeClaim:
+     #     claimName: bloodhound-postgres-pvc

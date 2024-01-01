@@ -1,50 +1,56 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bloodhound-postgres
-  namespace: bloodhoundad
-  metadata:
+  name: {{ .Values.app-db.name }}
+  namespace: {{ .Values.namespace }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
 spec:
-  replicas: 1
+  replicas: {{ .Values.app-db.replicas }}
   selector:
     matchLabels:
-      app: bloodhound-postgres
+      app: {{ .Values.app-db.appName }}
   template:
     metadata:
       labels:
-        app: bloodhound-postgres
+        app: {{ .Values.app-db.appName }}
     spec:
       containers:
-      - name: postgres
-        image: docker.io/library/postgres:13.2
+      - name: {{ .Values.app-db.container.name }}
+        image: {{ .Values.app-db.container.image }}
         env:
         - name: POSTGRES_USER
-          value: "bloodhound"
+          value: {{ .Values.app-db.container.env.POSTGRES_USER }}
         - name: POSTGRES_PASSWORD
-          value: "bloodhoundcommunityedition"
+          value: {{ .Values.app-db.container.env.POSTGRES_PASSWORD }}
         - name: POSTGRES_DB
-          value: "bloodhound"
+          value: {{ .Values.app-db.container.env.POSTGRES_DB }}
         ports:
-        - containerPort: 5432
+        - containerPort: {{ .Values.app-db.container.ports.containerPort }}
         livenessProbe:
           exec:
             command:
             - pg_isready
             - -U
-            - bloodhound
+            - {{ .Values.app-db.livenessProbe.user }}
             - -d
-            - bloodhound
+            - {{ .Values.app-db.livenessProbe.database }}
             - -h
             - 127.0.0.1
             - -p
-            - "5432"
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 5
-     # volumes:
-     #- name: postgres-data
-     #   persistentVolumeClaim:
-     #     claimName: bloodhound-postgres-pvc
+            - "{{ .Values.app-db.livenessProbe.port }}"
+          initialDelaySeconds: {{ .Values.app-db.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.app-db.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.app-db.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.app-db.livenessProbe.failureThreshold }}
+        {{- if .Values.app-db.volumes.pvcEnabled }}
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+        {{- end }}
+      {{- if .Values.app-db.volumes.pvcEnabled }}
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.app-db.volumes.persistentVolumeClaim.claimName }}
+      {{- end }}
