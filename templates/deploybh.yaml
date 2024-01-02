@@ -18,7 +18,7 @@ spec:
         image: {{ .Values.bloodhound.container.image }}
         env:
         - name: bhe_disable_cypher_qc
-          value: {{ .Values.bloodhound.container.env.bhe_disable_cypher_qc }}
+          value: "{{ .Values.bloodhound.container.env.bhe_disable_cypher_qc }}"
         ports:
         - containerPort: {{ (index .Values.bloodhound.container.ports 0).containerPort }}
         {{- if .Values.bloodhound.configMap.enabled }}

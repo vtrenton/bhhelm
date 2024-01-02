@@ -27,7 +27,7 @@ appdb:
     port: 5432
     targetPort: 5432
   volumes:
-    pvcEnabled: true  # Set to false to disable PVC
+    pvcEnabled: false 
     persistentVolumeClaim:
       claimName: bloodhound-postgres-pvc
       size: "1Gi"  # Configurable storage size
@@ -63,7 +63,7 @@ graphdb:
     timeoutSeconds: 5
     failureThreshold: 5
   volumes:
-    pvcEnabled: true  # Set to false to disable PVC
+    pvcEnabled: false 
     persistentVolumeClaim:
       claimName: graphdb-neo4j-data-pvc
       size: "1Gi"  # Configurable storage size

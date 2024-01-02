@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: {{ .Values.graphdb.name }}
   namespace: {{ .Values.namespace }}
-  annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
 spec:
   replicas: {{ .Values.graphdb.replicas }}
   selector:
@@ -20,9 +18,9 @@ spec:
         image: {{ .Values.graphdb.container.image }}
         env:
         - name: NEO4J_AUTH
-          value: {{ .Values.graphdb.container.env.NEO4J_AUTH }}
+          value: "{{ .Values.graphdb.container.env.NEO4J_AUTH }}"
         - name: NEO4J_dbms_allow__upgrade
-          value: {{ .Values.graphdb.container.env.NEO4J_dbms_allow__upgrade }}
+          value: "{{ .Values.graphdb.container.env.NEO4J_dbms_allow__upgrade }}"
         ports:
         - containerPort: {{ (index .Values.graphdb.container.ports 0).containerPort }}
         - containerPort: {{ (index .Values.graphdb.container.ports 1).containerPort }}
