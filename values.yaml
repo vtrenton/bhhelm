@@ -81,11 +81,11 @@ bloodhound:
       - containerPort: 8080
   service:
     enabled: true
-    type: LoadBalancer 
+    type: ClusterIP
     port: 8080
     targetPort: 8080
   ingress:
-    enabled: false
+    enabled: true
     host: bloodhound.example.com
     path: /
     tls: false
