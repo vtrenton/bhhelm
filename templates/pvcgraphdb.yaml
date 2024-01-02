@@ -1,13 +1,13 @@
-{{- if .Values.graph-db.volumes.pvcEnabled }}
+{{- if .Values.graphdb.volumes.pvcEnabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.graph-db.volumes.persistentVolumeClaim.claimName }}
+  name: {{ .Values.graphdb.volumes.persistentVolumeClaim.claimName }}
   namespace: {{ .Values.namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.graph-db.volumes.persistentVolumeClaim.size }}
+      storage: {{ .Values.graphdb.volumes.persistentVolumeClaim.size }}
 {{- end }}

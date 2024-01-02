@@ -1,15 +1,15 @@
-{{- if .Values.app-db.service.enabled }}
+{{- if .Values.appdb.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
   name: app-db
   namespace: {{ .Values.namespace }}
 spec:
-  type: {{ .Values.app-db.service.type }}
+  type: {{ .Values.appdb.service.type }}
   ports:
-    - port: {{ .Values.app-db.service.port }}
-      targetPort: {{ .Values.app-db.service.targetPort }}
+    - port: {{ .Values.appdb.service.port }}
+      targetPort: {{ .Values.appdb.service.targetPort }}
       protocol: TCP
   selector:
-    app: {{ .Values.app-db.appName }}
+    app: {{ .Values.appdb.appName }}
 {{- end }}

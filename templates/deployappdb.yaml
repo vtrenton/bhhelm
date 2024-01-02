@@ -1,56 +1,56 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.app-db.name }}
+  name: {{ .Values.appdb.name }}
   namespace: {{ .Values.namespace }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
 spec:
-  replicas: {{ .Values.app-db.replicas }}
+  replicas: {{ .Values.appdb.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.app-db.appName }}
+      app: {{ .Values.appdb.appName }}
   template:
     metadata:
       labels:
-        app: {{ .Values.app-db.appName }}
+        app: {{ .Values.appdb.appName }}
     spec:
       containers:
-      - name: {{ .Values.app-db.container.name }}
-        image: {{ .Values.app-db.container.image }}
+      - name: {{ .Values.appdb.container.name }}
+        image: {{ .Values.appdb.container.image }}
         env:
         - name: POSTGRES_USER
-          value: {{ .Values.app-db.container.env.POSTGRES_USER }}
+          value: {{ .Values.appdb.container.env.POSTGRES_USER }}
         - name: POSTGRES_PASSWORD
-          value: {{ .Values.app-db.container.env.POSTGRES_PASSWORD }}
+          value: {{ .Values.appdb.container.env.POSTGRES_PASSWORD }}
         - name: POSTGRES_DB
-          value: {{ .Values.app-db.container.env.POSTGRES_DB }}
+          value: {{ .Values.appdb.container.env.POSTGRES_DB }}
         ports:
-        - containerPort: {{ .Values.app-db.container.ports.containerPort }}
+        - containerPort: {{ .Values.appdb.container.ports.containerPort }}
         livenessProbe:
           exec:
             command:
             - pg_isready
             - -U
-            - {{ .Values.app-db.livenessProbe.user }}
+            - {{ .Values.appdb.livenessProbe.user }}
             - -d
-            - {{ .Values.app-db.livenessProbe.database }}
+            - {{ .Values.appdb.livenessProbe.database }}
             - -h
             - 127.0.0.1
             - -p
-            - "{{ .Values.app-db.livenessProbe.port }}"
-          initialDelaySeconds: {{ .Values.app-db.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.app-db.livenessProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.app-db.livenessProbe.timeoutSeconds }}
-          failureThreshold: {{ .Values.app-db.livenessProbe.failureThreshold }}
-        {{- if .Values.app-db.volumes.pvcEnabled }}
+            - "{{ .Values.appdb.livenessProbe.port }}"
+          initialDelaySeconds: {{ .Values.appdb.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.appdb.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.appdb.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.appdb.livenessProbe.failureThreshold }}
+        {{- if .Values.appdb.volumes.pvcEnabled }}
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
         {{- end }}
-      {{- if .Values.app-db.volumes.pvcEnabled }}
+      {{- if .Values.appdb.volumes.pvcEnabled }}
       volumes:
       - name: postgres-data
         persistentVolumeClaim:
-          claimName: {{ .Values.app-db.volumes.persistentVolumeClaim.claimName }}
+          claimName: {{ .Values.appdb.volumes.persistentVolumeClaim.claimName }}
       {{- end }}

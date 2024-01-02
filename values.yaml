@@ -1,6 +1,6 @@
 namespace: bloodhoundad
 
-app-db:
+appdb:
   name: bloodhound-postgres
   replicas: 1
   appName: bloodhound-postgres
@@ -32,10 +32,10 @@ app-db:
       claimName: bloodhound-postgres-pvc
       size: "1Gi"  # Configurable storage size
 
-graph-db:
-  name: graph-db
+graphdb:
+  name: graphdb
   replicas: 1
-  appName: graph-db
+  appName: graphdb
   container:
     name: neo4j
     image: docker.io/library/neo4j:4.4
@@ -49,7 +49,7 @@ graph-db:
     enabled: true
     type: ClusterIP
     ports:
-      - name: graph-db
+      - name: graphdb
         protocol: TCP
         port: 7687
         targetPort: 7687
@@ -65,7 +65,7 @@ graph-db:
   volumes:
     pvcEnabled: true  # Set to false to disable PVC
     persistentVolumeClaim:
-      claimName: graph-db-neo4j-data-pvc
+      claimName: graphdb-neo4j-data-pvc
       size: "1Gi"  # Configurable storage size
 
 bloodhound:
@@ -81,7 +81,7 @@ bloodhound:
       - containerPort: 8080
   service:
     enabled: true
-    type: ClusterIP
+    type: LoadBalancer 
     port: 8080
     targetPort: 8080
   ingress:

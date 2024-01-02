@@ -20,7 +20,7 @@ spec:
         - name: bhe_disable_cypher_qc
           value: {{ .Values.bloodhound.container.env.bhe_disable_cypher_qc }}
         ports:
-        - containerPort: {{ .Values.bloodhound.container.ports[0].containerPort }}
+        - containerPort: {{ (index .Values.bloodhound.container.ports 0).containerPort }}
         {{- if .Values.bloodhound.configMap.enabled }}
         volumeMounts:
         - name: bloodhound-config

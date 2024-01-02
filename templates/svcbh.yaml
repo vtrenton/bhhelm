@@ -13,5 +13,3 @@ spec:
   selector:
     app: {{ .Values.bloodhound.appName }}
 {{- end }}
-
-{{- if .Values.bloodhound.ingress.enabled }}

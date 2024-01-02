@@ -1,13 +1,13 @@
-{{- if .Values.app-db.volumes.pvcEnabled }}
+{{- if .Values.appdb.volumes.pvcEnabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.app-db.volumes.persistentVolumeClaim.claimName }}
+  name: {{ .Values.appdb.volumes.persistentVolumeClaim.claimName }}
   namespace: {{ .Values.namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.app-db.volumes.persistentVolumeClaim.size }}
+      storage: {{ .Values.appdb.volumes.persistentVolumeClaim.size }}
 {{- end }}
