@@ -21,7 +21,6 @@ spec:
           value: "{{ .Values.bloodhound.container.env.bhe_disable_cypher_qc }}"
         ports:
         - containerPort: {{ (index .Values.bloodhound.container.ports 0).containerPort }}
-        {{- if .Values.bloodhound.configMap.enabled }}
         readinessProbe:
           exec:
             command:
@@ -35,6 +34,8 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
+
+        {{- if .Values.bloodhound.configMap.enabled }}
         volumeMounts:
         - name: bloodhound-config
           mountPath: /path/to/config  # Update with actual mount path
