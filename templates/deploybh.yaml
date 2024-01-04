@@ -22,6 +22,19 @@ spec:
         ports:
         - containerPort: {{ (index .Values.bloodhound.container.ports 0).containerPort }}
         {{- if .Values.bloodhound.configMap.enabled }}
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - >
+              apk add --no-cache netcat-openbsd &&
+              nc -z app-db 5432 &&
+              nc -z graph-db 7687
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
         volumeMounts:
         - name: bloodhound-config
           mountPath: /path/to/config  # Update with actual mount path
