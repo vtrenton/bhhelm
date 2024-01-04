@@ -1,9 +1,9 @@
 namespace: bloodhoundad
 
 appdb:
-  name: bloodhound-postgres
+  name: postgres
   replicas: 1
-  appName: bloodhound-postgres
+  appName: postgres
   container:
     name: postgres
     image: docker.io/library/postgres:13.2
@@ -67,6 +67,14 @@ graphdb:
     persistentVolumeClaim:
       claimName: graphdb-neo4j-data-pvc
       size: "1Gi"  # Configurable storage size
+  ingress:
+    enabled: false
+    host: graphdb.example.com
+    path: /
+  tls: 
+    enabled: true
+    customCert: false
+    certSecret: graphdb-tls
 
 bloodhound:
   name: bloodhound
@@ -74,7 +82,8 @@ bloodhound:
   appName: bloodhound
   container:
     name: bloodhound
-    image: docker.io/specterops/bloodhound:latest
+    image: docker.io/specterops/bloodhound
+    version: latest
     env:
       bhe_disable_cypher_qc: "false"
     ports:
