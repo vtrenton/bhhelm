@@ -88,7 +88,10 @@ bloodhound:
     enabled: true
     host: bloodhound.example.com
     path: /
-    tls: false
+  tls: 
+    enabled: true
+    customCert: false
+    certSecret: bloodhound-tls
   configMap:
     enabled: false
     name: bloodhound-config
