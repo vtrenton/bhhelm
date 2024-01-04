@@ -35,6 +35,7 @@ spec:
         volumeMounts:
         - name: bloodhound-config
           mountPath: /bloodhound.config.json
+          subPath: bloodhound.config.json
         {{- end }}
       {{- if .Values.bloodhound.configMap.enabled }}
       volumes:

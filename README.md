@@ -19,12 +19,25 @@ In order to run this chart you will need the following:
 
 To install this chart inside of a Kubernetes cluster **make sure helm is properly configured to point at the correct cluster within the kubeconfig**. Once You have validated your helm install, clone this repo and run the following command from your workstation or pipeline:
 
-`$ helm install bhce $BH_ROOT/examples/helm/.`
+```
+$ helm install bhce $BH_ROOT/examples/helm/.
+```
 
 ## Accessing
 By default, the ingress is enabled. This means the application will be availible on the ingress endpoint with the host set to `bloodhound.example.com` (Each of these values can be configured in the values.yaml). As long as you have a properly configured ingress controller and valid DNS configuration the application will be availible at `https://bloodhound.example.com`, else without DNS you can test with curl by passing the 'Host' Header: `curl -H 'Host: bloodhound.example.com' https://$endpointIP`.
 
  If you have a TLS cert you can enable `bloodhound.tls.customCert` in the values.yaml and provide the ingress secret in `bloodhound.tls.certSecret`. Else, the privded cert will be self signed from the ingress controller.
+
+ ## Configuring BloodHound Community Edition
+
+To configure the Helm Chart deployment of BloodHound Community Edition you can use the two files specified below:
+
+-   `values.yaml` - A general Helm Chart configuration file - you can use this to configure aspects of the deployment of BloodHound and set Environment Variables. This file generally will be the single source of truth for application and depployment configuration.
+-   `templates/cmbh.yaml` - This is the Kubernetes configmap used for the BloodHound Application - you can add your own custom configuration in the `bloodhound-config.json` section of this file. Some of it is populated with the `values.yaml` as well for portibility
+
+If using a custom Certificate for TLS please terminate it on the ingress and not the application directly for easier Kubernetes native management. 
+
+Changing the database credentials is not a requirement for development/testing but is **Highly** Recommended for production environments.
 
  ## Ports
 The default ports are as follows:
