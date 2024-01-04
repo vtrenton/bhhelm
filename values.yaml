@@ -1,4 +1,4 @@
-namespace: bloodhoundad
+namespace: bloodhound
 
 appdb:
   name: postgres
